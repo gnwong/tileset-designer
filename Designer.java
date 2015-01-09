@@ -78,7 +78,7 @@ public class Designer {
 
     // Set up debug stuff
     JPanel debugPanel = new JPanel();
-    debugPanel.setLayout(new GridLayout(4,1));
+    debugPanel.setLayout(new GridLayout(5,1));
     JButton clearbtn = new JButton("Clear Selected");
     clearbtn.addActionListener(new ActionListener () {
       public void actionPerformed (ActionEvent evt) {
@@ -113,6 +113,19 @@ public class Designer {
         saveConfig();
       }
     });
+    JButton wmodebtn = new JButton("Mode: Base");
+    wmodebtn.addActionListener(new ActionListener () {
+      public void actionPerformed (ActionEvent evt) {
+        if (preview.writeMode == 0) {
+          preview.writeMode = 1;
+          wmodebtn.setText("Mode: Overlay");
+        } else if (preview.writeMode == 1) {
+          preview.writeMode = 0;
+          wmodebtn.setText("Mode: Base");
+        }
+        
+      }
+    });
     JButton debugbtn = new JButton("Debug");
     debugbtn.addActionListener(new ActionListener () {
       public void actionPerformed (ActionEvent evt) {
@@ -123,6 +136,7 @@ public class Designer {
     debugPanel.add(reloadbtn);
     debugPanel.add(clearbtn);
     debugPanel.add(skipbtn);
+    debugPanel.add(wmodebtn);
     debugPanel.add(savebtn);
     frame.add(debugPanel, BorderLayout.LINE_END);
 

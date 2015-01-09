@@ -26,7 +26,10 @@ public class PreviewPanel extends JPanel {
   public int width, height;
   public int selectX, selectY;
 
+  public int writeMode = 0; // 0 -> base; 1 -> overlay
+
   public int[][] map;
+  public int[][] overlay;
 
   private boolean isPreview;
   private PreviewPanel parentPanel;
@@ -45,9 +48,11 @@ public class PreviewPanel extends JPanel {
     verticalTileCount    = vertical;
     horizontalTileCount  = horizontal;
     map = new int[horizontal][vertical];
+    overlay = new int[horizontal][vertical];
     for (int i=0; i<horizontal; i++) {
       for (int j=0; j<vertical; j++) {
         map[i][j] = counter;
+        overlay[i][j] = -1;
         if (!this.isPreview) counter++;
       }
     }
@@ -92,7 +97,11 @@ public class PreviewPanel extends JPanel {
 
   public void setSelectedTileType (int type) {
     try {
-      map[selectX][selectY] = type;
+      if (writeMode == 0) {
+        map[selectX][selectY] = type;  
+      } else {
+        overlay[selectX][selectY] = type;
+      }
       repaint();
     } catch (Exception ex) {}
   }
@@ -108,12 +117,23 @@ public class PreviewPanel extends JPanel {
     g.setColor(new Color(0xEEEEEE));
     g.drawRect(0,0,getWidth(),getHeight());    
 
-    // Draw
+    // Draw base
     for (int i=0; i<horizontalTileCount; i++) {
       for (int j=0; j<verticalTileCount; j++) {
         g.drawImage(Images.tile(map[i][j]), i*(width+skip), j*(height+skip), width, height, null);
       }
     } 
+
+    // Draw overlay
+    if (this.isPreview) {
+      for (int i=0; i<horizontalTileCount; i++) {
+        for (int j=0; j<verticalTileCount; j++) {
+          if (overlay[i][j]>=0) {
+            g.drawImage(Images.tile(overlay[i][j]), i*(width+skip), j*(height+skip), width, height, null);
+          }
+        }
+      }
+    }
 
     // Draw selection tile
     g.setColor(Color.black);
