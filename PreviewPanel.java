@@ -27,6 +27,7 @@ public class PreviewPanel extends JPanel {
   public int selectX, selectY;
 
   public int writeMode = 0; // 0 -> base; 1 -> overlay
+  public int writeType = -1;
 
   public int[][] map;
   public int[][] overlay;
@@ -74,7 +75,11 @@ public class PreviewPanel extends JPanel {
             selectX = getTile(e.getX(), e.getY())[0];
             selectY = getTile(e.getX(), e.getY())[1];
             if (!isPreview) {
-              parentPanel.setSelectedTileType(map[selectX][selectY]);
+              parentPanel.writeType = map[selectX][selectY];
+            } else {
+              if (writeType >= 0) {
+                setSelectedTileType(writeType);
+              }
             }
             break;
           // Middle button

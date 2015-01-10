@@ -74,6 +74,7 @@ public class Designer {
     // Set up selection panel
     selection = new PreviewPanel(3, 10, false);
     selection.setParent(preview);
+    preview.setParent(selection);
     frame.add(selection, BorderLayout.PAGE_END);
 
     // Set up debug stuff
@@ -82,6 +83,7 @@ public class Designer {
     JButton clearbtn = new JButton("Clear Selected");
     clearbtn.addActionListener(new ActionListener () {
       public void actionPerformed (ActionEvent evt) {
+        preview.writeType = -1;
         preview.selectX = -1;
         preview.selectY = -1;
         preview.repaint();
@@ -153,7 +155,15 @@ public class Designer {
       for (int i=0; i<preview.horizontalTileCount; i++) {
         for (int j=0; j<preview.verticalTileCount; j++) {
           c = inputStream.read();
-          preview.map[i][j] = Character.getNumericValue(c);
+          //preview.map[i][j] = Character.getNumericValue(c);
+          preview.map[i][j] = c - 36;
+        }
+      }
+      for (int i=0; i<preview.horizontalTileCount; i++) {
+        for (int j=0; j<preview.verticalTileCount; j++) {
+          c = inputStream.read();
+          //preview.overlay[i][j] = Character.getNumericValue(c);
+          preview.overlay[i][j] = c - 36;
         }
       }
     } catch (Exception ex) {
@@ -172,7 +182,14 @@ public class Designer {
       outputStream = new FileWriter("./config.txt");
       for (int i=0; i<preview.horizontalTileCount; i++) {
         for (int j=0; j<preview.verticalTileCount; j++) {
-          outputStream.write(Integer.toString(preview.map[i][j]));
+          //outputStream.write(Integer.toString(preview.map[i][j]));
+          outputStream.write(preview.map[i][j]+36);
+        }
+      }
+      for (int i=0; i<preview.horizontalTileCount; i++) {
+        for (int j=0; j<preview.verticalTileCount; j++) {
+          //outputStream.write(Integer.toString(preview.overlay[i][j]));
+          outputStream.write(preview.overlay[i][j]+36);
         }
       }
     } catch (Exception ex) {
